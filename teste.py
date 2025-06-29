@@ -1,15 +1,23 @@
 import ollama
+from translate import Translator
 
 def ask_deepseek(question, model="deepseek-r1:1.5B"):
     response = ollama.generate(
         model=model,
-        prompt=f"Responda de forma concisa e técnica e em português brasil por favor: {question}",
-        options={'temperature': 0.1} 
+        prompt=question,
+        options= {'temperature': 0,
+                 'max_tokens': 300  # Limita o tamanho da resposta
+                 }
     )
-    return response['response']
+    resposta = response['response']
+    tradutor = Translator(from_lang="en", to_lang="pt",provider="mymemory")
+    ##return resposta
+    return tradutor.translate(resposta)
 
-pergunta = "Explique teoria da computação e suas aplicações práticas."
+
+
+pergunta = "Quais os planetas do sistema solar?"
 resposta = ask_deepseek(pergunta)
 
 print("Pergunta:\n", pergunta)
-print("\nResposta do DeepSeek:\n", resposta)
+print("\nResposta:\n", resposta) 
